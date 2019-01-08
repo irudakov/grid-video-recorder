@@ -22,7 +22,7 @@ import io.nirvagi.utils.node.helper.HttpGetHelper;
 import java.util.Map;
 
 import org.openqa.grid.common.RegistrationRequest;
-import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.GridRegistry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
@@ -41,8 +41,10 @@ public class ScreenRecordingProxy extends DefaultRemoteProxy {
 	private boolean isScreenRecordingRequested(final Map<String, Object> caps) {
 		boolean isScreenRecordingRequested = false;
 		try {
-			isScreenRecordingRequested = (Boolean) caps.get(SCREEN_RECORDING_CAPABILITY);
+			isScreenRecordingRequested = Boolean.valueOf(caps.get(SCREEN_RECORDING_CAPABILITY).toString());
+			System.out.println("Video recording capability set to: " + isScreenRecordingRequested);
 		} catch (Exception err) {
+			err.printStackTrace();
 
 		}
 		return isScreenRecordingRequested;
@@ -59,7 +61,7 @@ public class ScreenRecordingProxy extends DefaultRemoteProxy {
 		return timeout;
 	}
 
-	public ScreenRecordingProxy(RegistrationRequest request, Registry registry) {
+	public ScreenRecordingProxy(RegistrationRequest request, GridRegistry registry) {
 		super(request, registry);
 		this.nodeUrl = this.getRemoteHost().toString();
 		System.out.println("Registering screen recording  proxy ....");
@@ -78,12 +80,17 @@ public class ScreenRecordingProxy extends DefaultRemoteProxy {
 			HttpGetHelper helper = new HttpGetHelper(startRecordingString);
 			try {
 				helper.execute();
+				/* TODO remove this lines after debugging completion*/
+				System.out.print("GET request has been sent");
 				hasRecordingStarted = true;
 			} catch (Exception err) {
 				System.out
 						.println("Error occurred while starting the recording "
 								+ err.getMessage());
 			}
+		} else {
+			System.out.println("VideoRecorder wasn't activated!");
+
 		}
 	}
 

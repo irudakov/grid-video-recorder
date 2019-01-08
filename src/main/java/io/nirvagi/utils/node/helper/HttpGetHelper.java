@@ -56,11 +56,17 @@ public class HttpGetHelper {
 	public HttpGetHelper(final String url){
 		try {
 			new URL(url);
+			/* TODO remove this lines after debugging completion*/
+			System.out.println("Url passed over to Httphelper is valid");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(String.format(ERR_MESSAGE, url));
 		}
 		client = HttpClients.createDefault();
+		/* TODO remove this lines after debugging completion*/
+		System.out.println("Variable client initiated");
 		httpGet = new HttpGet(url);
+		/* TODO remove this lines after debugging completion*/
+		System.out.println("Http request(GET) prepared");
 	}
 	
 	
@@ -69,11 +75,13 @@ public class HttpGetHelper {
 	public void execute(){
 		try {
 			client.execute(httpGet, createHttpResponseHandler());
+			System.out.println("Get request triggered");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}finally{
 			try {
 				this.client.close();
+				System.out.println("Http client got closed due to...");
 			} catch (IOException e) {
 			}
 		}
