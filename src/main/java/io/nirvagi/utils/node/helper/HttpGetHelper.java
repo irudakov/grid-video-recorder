@@ -17,56 +17,34 @@
  
 package io.nirvagi.utils.node.helper;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.HttpUrl;
 
 public class HttpGetHelper {
 	private static final String ERR_MESSAGE = "The url %s passed is malformed";
 	private static final String HTTP_GET_FAILED_MESSAGE = "The http get for the url %s failed, The client returned the code of %s with message %s";
 	
-	private final CloseableHttpClient client;
-	private final HttpGet httpGet;
+	private final OkHttpClient client;
+	private final Request httpRequest;
 	
-	private ResponseHandler<String> createHttpResponseHandler() {
-		return new ResponseHandler<String>() {
 
-			public String handleResponse(HttpResponse response)
-					throws ClientProtocolException, IOException {
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode != 200) {
-					throw new ClientProtocolException(String.format(
-							HTTP_GET_FAILED_MESSAGE, httpGet.getURI()
-									.toString(), statusCode, response
-									.getStatusLine().getReasonPhrase()));
-				}
-				return "SUCCESS";
-			}
-		};
-
-	}
-	
 	public HttpGetHelper(final String url){
-		try {
-			new URL(url);
+
+		HttpUrl URL = HttpUrl.parse(url);
 			/* TODO remove this lines after debugging completion*/
-			System.out.println("Url passed over to Httphelper is valid");
-		} catch (MalformedURLException e) {
+
+		if (URL == null) {
 			throw new RuntimeException(String.format(ERR_MESSAGE, url));
 		}
-		client = HttpClients.createDefault();
-		/* TODO remove this lines after debugging completion*/
-		System.out.println("Variable client initiated");
-		httpGet = new HttpGet(url);
+		System.out.println("Url passed over to Httphelper is valid");
+		httpRequest = new Request.Builder()
+		.url(url)
+		.build();
 		/* TODO remove this lines after debugging completion*/
 		System.out.println("Http request(GET) prepared");
+		client = new OkHttpClient();
 	}
 	
 	
@@ -74,16 +52,21 @@ public class HttpGetHelper {
 	
 	public void execute(){
 		try {
-			client.execute(httpGet, createHttpResponseHandler());
+			//TODO add response handler
+			Response response = client.newCall(httpRequest).execute();
+			if (!response.isSuccessful()) {
+				System.out.println(String.format(
+						HTTP_GET_FAILED_MESSAGE, httpRequest.url()
+								.toString(), response.code(), response
+								.message()));
+			}
 			System.out.println("Get request triggered");
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}finally{
-			try {
-				this.client.close();
+				this.client.dispatcher().executorService().shutdown();
 				System.out.println("Http client got closed due to...");
-			} catch (IOException e) {
-			}
+
 		}
 	}
 	

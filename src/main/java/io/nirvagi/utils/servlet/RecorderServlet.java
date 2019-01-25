@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
+import java.nio.file.*;
 
 /**
  * 
@@ -140,11 +140,13 @@ public class RecorderServlet extends HttpServlet {
 				resp.setContentType(CONTENT_TYPE);
 				resp.setHeader(CONTENT_DISPOSITION_HEADER,
 						String.format(FILE_NAME, filename));
-				FileUtils.copyFile(new File(filename), resp.getOutputStream());
+				//FileUtils.copyFile(new File(filename), resp.getOutputStream());
+				Files.copy((new File(filename)).toPath(),resp.getOutputStream());
 				return;
 			}
 		} catch (Exception err) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, err.getMessage());
+			err.printStackTrace();
 			return;
 		}
 		resp.setStatus(HttpServletResponse.SC_OK);
