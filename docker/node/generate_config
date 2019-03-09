@@ -13,7 +13,7 @@ cat <<_EOF
       "applicationName": "$NODE_APPLICATION_NAME"
     }
   ],
-  "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
+  "proxy": "io.nirvagi.utils.node.proxy.ScreenRecordingProxy",
   "maxSession": $NODE_MAX_SESSION,
   "host": "$NODE_HOST",
   "port": $NODE_PORT,
@@ -23,5 +23,6 @@ cat <<_EOF
   "unregisterIfStillDownAfter": $NODE_UNREGISTER_IF_STILL_DOWN_AFTER,
   "downPollingLimit": $NODE_DOWN_POLLING_LIMIT,
   "debug": $GRID_DEBUG
+  "servlets": ["io.nirvagi.utils.servlet.RecorderServlet"]
 }
 _EOF
