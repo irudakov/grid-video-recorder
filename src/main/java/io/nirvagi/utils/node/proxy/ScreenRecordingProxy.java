@@ -21,6 +21,9 @@ import io.nirvagi.utils.node.helper.HttpGetHelper;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.GridRegistry;
 import org.openqa.grid.internal.TestSession;
@@ -93,6 +96,18 @@ public class ScreenRecordingProxy extends DefaultRemoteProxy {
 
 		}
 	}
+
+
+	public void beforeCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
+		super.beforeCommand(session, request, response);
+
+	}
+
+	public void afterCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
+		super.afterCommand(session, request, response);
+
+	}
+
 
 	public void afterSession(TestSession session) {
 		if (this.hasRecordingStarted == true) {
