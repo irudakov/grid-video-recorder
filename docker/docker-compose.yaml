@@ -1,0 +1,21 @@
+version: "3"
+services:
+  hub-video:
+    build:
+      context: ../
+      dockerfile: docker/hub/Dockerfile
+    image: irudakov/hub-video:dev
+    ports:
+      - "4444:4444"
+  node-video:
+    build:
+      context: ../
+      dockerfile: docker/node/Dockerfile
+    image: irudakov/node-video:dev
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub-video
+    environment:
+      - HUB_HOST=hub-video
+      - HUB_PORT=4444
