@@ -4,9 +4,9 @@ LABEL author=irudakov
 USER seluser
 
 COPY docker/node/start-selenium-node.sh \
-     MonteScreenRecorder.jar \
      docker/node/generate_config \
-/opt/bin/
+     /opt/bin/
 
 COPY target/grid-video-recorder.jar \ 
-/opt/selenium
+     MonteScreenRecorder.jar \
+     /opt/selenium
