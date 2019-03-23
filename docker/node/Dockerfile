@@ -9,4 +9,4 @@ COPY docker/node/start-selenium-node.sh \
 
 COPY target/grid-video-recorder.jar \ 
      MonteScreenRecorder.jar \
-     /opt/selenium
+     /opt/selenium/
