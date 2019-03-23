@@ -100,11 +100,13 @@ public class ScreenRecordingProxy extends DefaultRemoteProxy {
 
 	public void beforeCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
 		super.beforeCommand(session, request, response);
+		System.out.println("Command executing: " + session.get("lastCommand").toString());
 
 	}
 
 	public void afterCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
 		super.afterCommand(session, request, response);
+		System.out.println("Command executed: " + session.get("lastCommand").toString());
 
 	}
 
