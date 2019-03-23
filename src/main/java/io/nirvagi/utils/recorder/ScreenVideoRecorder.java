@@ -33,4 +33,6 @@ public interface ScreenVideoRecorder {
 	
 	public Set<File> getRecordedFiles();
 
+	public File getLastRecordedFile();
+
 }

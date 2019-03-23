@@ -41,6 +41,7 @@ public class MonteScreenRecorder implements ScreenVideoRecorder {
 	private final Set<File> files;
 	private static RecorderState state = RecorderState.STOPPED;
 	private String key;
+	private File LastCreated = null;
 
 	public MonteScreenRecorder() {
 		GraphicsConfiguration gc = GraphicsEnvironment
@@ -94,11 +95,16 @@ public class MonteScreenRecorder implements ScreenVideoRecorder {
 		state = RecorderState.STOPPED;
 		List<File> createdFiles = screenRecorder.getCreatedMovieFiles();
 		File createdFile = createdFiles.get(createdFiles.size() - 1);
+		this.LastCreated = createdFile;
 		files.add(createdFile);
 	}
 
 	public Set<File> getRecordedFiles() {
 		return this.files;
+	}
+
+	public File getLastRecordedFile() {
+		return LastCreated;
 	}
 
 	public RecorderState getState() {

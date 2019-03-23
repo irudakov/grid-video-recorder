@@ -60,18 +60,14 @@ public class RecorderServlet extends HttpServlet {
 
 	// html fragment for rendering files
 	private static final String FILE_ELEMENT_HTML_FRAGMENT = "<li><a href=\"?action=download&filename=%s\">%s</a></li>";
+	private static String recorderKey;
 	private ScheduledExecutorService executorService;
 	private ScreenVideoRecorder recorder;
 	private ScheduledFuture<?> futureHandle;
-	private static String recorderKey;
 
 	public void init() {
 		recorder = new MonteScreenRecorder();
 		executorService = Executors.newScheduledThreadPool(1);
-	}
-
-	public enum Action {
-		START, STOP, SHOWFILES, DOWNLOAD;
 	}
 
 	private Action getActionFromParam(final String action) {
@@ -93,7 +89,18 @@ public class RecorderServlet extends HttpServlet {
 		sb.append("</ul></html>");
 		return sb.toString();
 	}
-	
+
+	private String buildLastRecordedFileHtml(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("<html><ul>");
+		File file = recorder.getLastRecordedFile();
+		sb.append(String.format(FILE_ELEMENT_HTML_FRAGMENT, file.getPath(),
+				file.getName()));
+		sb.append("/ul></html>");
+		return sb.toString();
+
+	}
+
 	private long getTimeout(String timeout){
 		if(timeout == null || timeout.isEmpty()){
 			throw new RuntimeException("Timeout for starting the recorder cannot be null or empty!");
@@ -104,7 +111,7 @@ public class RecorderServlet extends HttpServlet {
 			throw new RuntimeException("timeout should be in int ");
 		}
 	}
-
+	
 	private void process(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		Action action = this.getActionFromParam(req.getParameter(ACTION_PARAM));
@@ -143,6 +150,11 @@ public class RecorderServlet extends HttpServlet {
 				//FileUtils.copyFile(new File(filename), resp.getOutputStream());
 				Files.copy((new File(filename)).toPath(),resp.getOutputStream());
 				return;
+			case LASTRECORDED:
+				String lastFileHTML = buildLastRecordedFileHtml();
+				resp.getWriter().print(lastFileHTML);
+				return;
+
 			}
 		} catch (Exception err) {
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, err.getMessage());
@@ -156,12 +168,12 @@ public class RecorderServlet extends HttpServlet {
 			throws IOException {
 		process(req, resp);
 	}
-	
+
 	/**
-	 * Cleanup and delete all the files on shutting down this servlet 
-	 * Stop the executorservice if it is actively running 
-	 * Stop the recorder if it is running already 
-	 * 
+	 * Cleanup and delete all the files on shutting down this servlet
+	 * Stop the executorservice if it is actively running
+	 * Stop the recorder if it is running already
+	 *
 	 */
 
 	public void destroy() {
@@ -177,6 +189,10 @@ public class RecorderServlet extends HttpServlet {
 		for (File f : files) {
 			f.delete();
 		}
+	}
+	
+	public enum Action {
+		START, STOP, SHOWFILES, DOWNLOAD, LASTRECORDED;
 	}
 
 }
