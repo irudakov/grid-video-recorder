@@ -6,7 +6,7 @@
 
 	<servlet>
 		<servlet-name>RecorderServlet</servlet-name>
-		<servlet-class>io.nirvagi.utils.servlet.ScreenRecorderServlet</servlet-class>
+		<servlet-class>io.nirvagi.utils.servlet.RecorderServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

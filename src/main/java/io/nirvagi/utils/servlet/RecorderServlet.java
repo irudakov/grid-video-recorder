@@ -96,7 +96,7 @@ public class RecorderServlet extends HttpServlet {
 		File file = recorder.getLastRecordedFile();
 		sb.append(String.format(FILE_ELEMENT_HTML_FRAGMENT, file.getPath(),
 				file.getName()));
-		sb.append("/ul></html>");
+		sb.append("</ul></html>");
 		return sb.toString();
 
 	}

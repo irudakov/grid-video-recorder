@@ -36,6 +36,7 @@ public class ScreenRecordingProxy extends DefaultRemoteProxy {
 	private static final int DEFAULT_STOP_TIMEOUT = 180;
 	private static final String START_RECORDING_STRING = "%s/extra/RecorderServlet?action=start&key=%s&timeout=%s";
 	private static final String STOP_RECORDING_STRING = "%s/extra/RecorderServlet?action=stop&key=%s";
+	private static final String LAST_RECORDED_STRING = "%s/extra/RecorderServlet?action=lastrecorded";
 	
 	private final String nodeUrl ;
 	private boolean hasRecordingStarted = false;

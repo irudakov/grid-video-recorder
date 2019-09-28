@@ -82,6 +82,10 @@ public class MockRecorder implements ScreenVideoRecorder{
 		return files;
 	}
 
+	@Override
+	public File getLastRecordedFile() {
+		return null;
+	}
 
 	public RecorderState getState() {
 		return MockRecorder.state;
